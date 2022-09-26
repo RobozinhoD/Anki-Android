@@ -1867,16 +1867,17 @@ open class Collection(
         val problems = ArrayList<String?>(1)
         // #5708 - a dynamic deck should not have "Deck Options"
         notifyProgress.run()
-        @KotlinCleanup(".count { }")
-        var fixCount = 0
-        for (id in decks.allDynamicDeckIds()) {
+        val fixCount = decks.allDynamicDeckIds().count { id ->
             try {
                 if (hasDeckOptions(id)) {
                     removeDeckOptions(id)
-                    fixCount++
+                    true
+                } else {
+                    false
                 }
             } catch (e: NoSuchDeckException) {
                 Timber.w(e, "Unable to find dynamic deck %d", id)
+                false
             }
         }
         if (fixCount > 0) {
