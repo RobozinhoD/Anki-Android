@@ -1679,17 +1679,13 @@ open class Collection(
             configIds.add(conf.getLong("id"))
         }
         notifyProgress.run()
-        @KotlinCleanup("use count { }")
-        var changed = 0
-        for (d in decks.all()) {
-            // dynamic decks do not have dconf
-            if (Decks.isDynamic(d)) {
-                continue
-            }
-            if (!configIds.contains(d.getLong("conf"))) {
-                Timber.d("Reset %s's config to default", d.optString("name", "unknown deck"))
-                d.put("conf", Consts.DEFAULT_DECK_CONFIG_ID)
-                changed++
+        val changed = decks.all().count { deck ->
+            if (!Decks.isDynamic(deck) && !configIds.contains(deck.getLong("conf"))) {
+                Timber.d("Reset %s's config to default", deck.optString("name", "unknown deck"))
+                deck.put("conf", Consts.DEFAULT_DECK_CONFIG_ID)
+                true
+            } else {
+                false
             }
         }
         val ret: MutableList<String?> = ArrayList(1)
