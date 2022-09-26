@@ -21,6 +21,9 @@ package com.ichi2.libanki
 import android.database.SQLException
 import android.text.TextUtils
 import androidx.annotation.CheckResult
+import anki.search.SearchNode
+import anki.search.SearchNodeKt
+import anki.search.searchNode
 import com.ichi2.libanki.SortOrder.*
 import com.ichi2.libanki.stats.Stats
 import com.ichi2.libanki.utils.TimeManager.time
@@ -906,7 +909,17 @@ class Finder(private val col: Collection) {
             // limit search to notes with applicable field name
             @Suppress("NAME_SHADOWING")
             var search = search
-            search = col.buildFindDupesString(fieldName!!, search!!)
+            search = col.buildSearchString(
+                searchNode {
+                    group = SearchNodeKt.group {
+                        joiner = SearchNode.Group.Joiner.AND
+                        if (search!!.isNotEmpty()) {
+                            nodes += searchNode { literalText = search!! }
+                        }
+                        nodes += searchNode { this.fieldName = fieldName!! }
+                    }
+                }
+            )
             // go through notes
             val nids = col.findNotes(search)
             val vals: MutableMap<String, MutableList<Long>> = HashMapInit(nids.size)
