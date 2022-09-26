@@ -26,7 +26,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.res.Resources
 import android.database.sqlite.SQLiteDatabaseLockedException
-import android.text.TextUtils
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import anki.search.SearchNode
@@ -74,7 +73,6 @@ import kotlin.random.Random
 //
 // This module manages the tag cache and tags for notes.
 @KotlinCleanup("Fix @Contract annotations to work in Kotlin")
-@KotlinCleanup("TextUtils -> Kotlin isNotEmpty()")
 @KotlinCleanup("inline function in init { } so we don't need to init `crt` etc... at the definition")
 @KotlinCleanup("ids.size != 0")
 open class Collection(
@@ -2153,7 +2151,7 @@ open class Collection(
         }
         val s = String.format(
             "[%s] %s:%s(): %s", TimeManager.time.intTime(), trace.fileName, trace.methodName,
-            TextUtils.join(",  ", args)
+            args.joinToString(",  ")
         )
         writeLog(s)
     }
