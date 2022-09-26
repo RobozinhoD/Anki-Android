@@ -139,8 +139,6 @@ open class Collection(
     lateinit var decks: DeckManager
         protected set
 
-    @KotlinCleanup("change to lazy")
-    private var _models: ModelManager? = null
     val tags: TagManager
 
     @KotlinCleanup(
@@ -222,12 +220,6 @@ open class Collection(
 
     protected open fun initTags(): TagManager {
         return Tags(this)
-    }
-
-    protected open fun initModels(): ModelManager {
-        val models = Models(this)
-        models.load(loadColumn("models"))
-        return models
     }
 
     fun name(): String {
@@ -2200,13 +2192,11 @@ open class Collection(
      *
      * @return The model manager
      */
-    val models: ModelManager
-        get() {
-            if (_models == null) {
-                _models = initModels()
-            }
-            return _models!!
+    val models: ModelManager by lazy {
+        Models(this).apply {
+            load(loadColumn("models"))
         }
+    }
 
     /** Check if this collection is valid.  */
     fun validCollection(): Boolean {
