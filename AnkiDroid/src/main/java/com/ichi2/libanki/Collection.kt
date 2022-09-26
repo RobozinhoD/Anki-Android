@@ -965,12 +965,7 @@ open class Collection(
     /**
      * Bulk delete cards by ID.
      */
-    fun remCards(ids: List<Long>) {
-        remCards(ids, true)
-    }
-
-    @KotlinCleanup("add overloads")
-    fun remCards(ids: kotlin.collections.Collection<Long>, notes: Boolean) {
+    fun remCards(ids: kotlin.collections.Collection<Long>, notes: Boolean = true) {
         if (ids.isEmpty()) {
             return
         }
