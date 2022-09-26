@@ -74,7 +74,6 @@ import kotlin.random.Random
 // This module manages the tag cache and tags for notes.
 @KotlinCleanup("Fix @Contract annotations to work in Kotlin")
 @KotlinCleanup("inline function in init { } so we don't need to init `crt` etc... at the definition")
-@KotlinCleanup("ids.size != 0")
 open class Collection(
     /**
      * @return The context that created this Collection.
@@ -1938,7 +1937,7 @@ open class Collection(
             "select id from cards where odid > 0 and did in " + Utils.ids2str(dids)
         )
         notifyProgress.run()
-        if (ids.size != 0) {
+        if (ids.isNotEmpty()) {
             problems.add("Fixed " + ids.size + " card(s) with invalid properties.")
             db.execute("update cards set odid=0, odue=0 where id in " + Utils.ids2str(ids))
         }
@@ -1954,7 +1953,7 @@ open class Collection(
             "select id from cards where odue > 0 and (type= " + Consts.CARD_TYPE_LRN + " or queue=" + Consts.QUEUE_TYPE_REV + ") and not odid"
         )
         notifyProgress.run()
-        if (ids.size != 0) {
+        if (ids.isNotEmpty()) {
             problems.add("Fixed " + ids.size + " card(s) with invalid properties.")
             db.execute("update cards set odue=0 where id in " + Utils.ids2str(ids))
         }
@@ -1970,7 +1969,7 @@ open class Collection(
             "SELECT id FROM cards WHERE nid NOT IN (SELECT id FROM notes)"
         )
         notifyProgress.run()
-        if (ids.size != 0) {
+        if (ids.isNotEmpty()) {
             problems.add("Deleted " + ids.size + " card(s) with missing note.")
             remCards(ids)
         }
@@ -1986,7 +1985,7 @@ open class Collection(
             "SELECT id FROM notes WHERE id NOT IN (SELECT DISTINCT nid FROM cards)"
         )
         notifyProgress.run()
-        if (ids.size != 0) {
+        if (ids.isNotEmpty()) {
             problems.add("Deleted " + ids.size + " note(s) with missing no cards.")
             _remNotes(ids)
         }
@@ -2087,7 +2086,7 @@ open class Collection(
             )
         )
         notifyProgress.run()
-        if (ids.size != 0) {
+        if (ids.isNotEmpty()) {
             problems.add("Deleted " + ids.size + " note(s) with missing note type.")
             _remNotes(ids)
         }
