@@ -20,6 +20,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.text.TextUtils
 import androidx.browser.customtabs.CustomTabsService
+import com.ichi2.compat.CompatHelper.Companion.resolveServiceCompat
 import timber.log.Timber
 
 /**
@@ -70,7 +71,7 @@ object CustomTabsHelper {
             val serviceIntent = Intent()
             serviceIntent.action = CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION
             serviceIntent.setPackage(info.activityInfo.packageName)
-            if (pm.resolveService(serviceIntent, 0) != null) {
+            if (pm.resolveServiceCompat(serviceIntent, 0) != null) {
                 packagesSupportingCustomTabs.add(info.activityInfo.packageName)
             }
         }

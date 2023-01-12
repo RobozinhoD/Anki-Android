@@ -20,6 +20,8 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.media.AudioFocusRequest
@@ -60,6 +62,14 @@ open class CompatV21 : Compat {
     // Until API31 the MediaRecorder constructor was default, ignoring the Context
     override fun getMediaRecorder(context: Context): MediaRecorder {
         return MediaRecorder()
+    }
+
+    override fun resolveService(
+        packageManager: PackageManager,
+        intent: Intent,
+        flags: Int
+    ): ResolveInfo? {
+        return packageManager.resolveService(intent, flags)
     }
 
     override fun <T : Serializable?> getSerializableExtra(

@@ -18,11 +18,21 @@ package com.ichi2.compat
 
 import android.annotation.TargetApi
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.os.Parcelable
 import java.io.Serializable
 
 @TargetApi(33)
 open class CompatV33 : CompatV31(), Compat {
+    override fun resolveService(
+        packageManager: PackageManager,
+        intent: Intent,
+        flags: Int
+    ): ResolveInfo? {
+        return packageManager.resolveService(intent, PackageManager.ResolveInfoFlags.of(0))
+    }
+
     override fun <T : Serializable?> getSerializableExtra(intent: Intent, name: String, className: Class<T>): T? {
         return intent.getSerializableExtra(name, className)
     }
